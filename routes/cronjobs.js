@@ -16,13 +16,16 @@ db.open(function(err, db) {
                 populateDB();
             }
         });
-    }
+    }else{
+			console.log(err);
+		}
 });
  
 exports.getAll = function(req, res) {		
     db.collection('cronjobs', function(err, collection) {
         collection.find().toArray(function(err, items) {
             res.send(items);
+						console.log(items);
         });
     });
 };
