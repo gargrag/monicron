@@ -4,7 +4,7 @@ block content
   div.container
     h1 MoniCron 
     p Monitor your cronjobs
-    table#cronjob-list.table.table-striped
+    table.table.table-striped
       thead
         tr
           th Server
@@ -13,6 +13,7 @@ block content
           th Started
           th Ended
           th Status
+      tbody#cronjob-list
 
 
   script#item-template(type='text/template')
@@ -21,3 +22,9 @@ block content
     td <%= frequency %>
     td <%= started %>
     td <% print('---'); %>
+    td
+      | <% switch(state.id) { case 0: %>
+      | <span class="label label-success"><%= state.name %></span>
+      | <% break; case 1 : %>
+      | <span class="label label-primary"><%= state.name %></span>
+      | <% break; } %>

@@ -1,5 +1,5 @@
-$(document).ready(function(){
 var app = {}; // create namespace for our app
+$(document).ready(function(){
 
 app.CronJob = Backbone.Model.extend({
 	defaults: {
@@ -14,7 +14,6 @@ app.CronJobCollection = Backbone.Collection.extend({
 	model: app.CronJob,
 	url: '/cronjobs',
 	parse: function(response) {
-		console.log(response);
 		return response;
 	}
 });
@@ -26,13 +25,12 @@ app.CronJobView = Backbone.View.extend({
 	template: _.template($('#item-template').html()),
 	render: function(){
 		this.$el.html(this.template(this.model.toJSON()));
-		console.log(this);
 		return this.$el; // enable chained calls
 	}
 });
 
 app.AppView = Backbone.View.extend({
-	el: '.container',
+	el: '#cronjob-list',
 	initialize: function () {
 		//this.input = this.$('#new-todo');
 		// when new elements are added to the collection render then with addOne
@@ -41,11 +39,13 @@ app.AppView = Backbone.View.extend({
 		app.cronJobCollection.fetch(); 
 	},
 	addOne: function(cronjob){
+    console.log("asd");
 		var view = new app.CronJobView({model: cronjob});
 		$('#cronjob-list').append(view.render());
 	},
 	addAll: function(){
-		this.$('#cronjob-list').html(''); // clean the todo list
+    console.log("hola");
+    $("#cronjob-list").empty(function(){ console.log("chau");});
 		app.cronJobCollection.each(this.addOne, this);
 	},
 	newAttributes: function(){
@@ -56,7 +56,8 @@ app.AppView = Backbone.View.extend({
 	}
 });
 
-
-
 	var appView = new app.AppView();
+  window.setInterval(function(){
+    app.cronJobCollection.fetch({reset: true});
+  }, 2000);
 });

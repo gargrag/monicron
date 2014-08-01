@@ -18,6 +18,7 @@ app.get('/', frontend.index);
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
     app.use(express.bodyParser());
+	  app.locals.pretty = true;		
 		app.set('view options', {layout : false});
 		app.set('view engine', 'jade');
 		app.set('views', __dirname + '/views');

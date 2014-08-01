@@ -52,6 +52,9 @@ exports.getPerId = function(req, res) {
 };
 
 exports.startJob = function(req, res) {
+
+		var date = new Date();
+
 		var cronjob = {
 			_id: {
 				server: req.params.server,
@@ -60,7 +63,8 @@ exports.startJob = function(req, res) {
 			server: req.params.server,
 			job_id: req.params.job_id,
 			frequency: req.params.frequency,
-			started: new Date().getTime()
+			started: date.toUTCString(),
+			state: { id: 0, name: "running" }
 		}
 
 		console.log('Starting cronjob: ' + JSON.stringify(cronjob));		
@@ -78,15 +82,27 @@ exports.startJob = function(req, res) {
 }
 
 exports.endJob = function(req, res){
+		var date = new Date();
+
 		var id = {
 			server: req.params.server,
 			job_id: req.params.job_id
+		}
+
+		var update = {
+			$set:{ 
+				"ended" : date.toUTCString(),
+				"state" : {
+					id: 1,
+					name: "done"
+				}				
+			}
 		}
 		
 		console.log('Stopping cronjob: ' + JSON.stringify(id));
 
 		db.collection('cronjobs', function(err, collection){
-			collection.update(id, {$set: {"ended": new Date().getTime()}}, {safe:true}, function(err, result){
+			collection.update(id, update, {safe:true}, function(err, result){
 				if (err) {
 					res.send({'error': 'An error has ocurred'});
 				}else{
@@ -105,8 +121,10 @@ var populateDB = function() {
     var cronjobs = [
     {
         server: "test_server",
-        started: new Date().getTime(),
-        last_message: "Started maintenance cronjob."
+				job_id: "maintenance",
+				frequency: 5,
+        started: new Date().toUTCString(),
+				state: {id: 0, name: "running"}
     },
 		];
  
@@ -115,3 +133,9 @@ var populateDB = function() {
     });
  
 };
+
+var humanDate = function(timestamp){
+	var date = new Date(timestamp);
+	return date.getFullYear + '-' + date.getMonth()++ + '-' + date.getDate() + ' ' +
+		date.getHours() + ':' + date.getMinutes();
+}
