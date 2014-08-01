@@ -24,7 +24,7 @@ app.CronJobView = Backbone.View.extend({
 	tagName: 'tr',
 	template: _.template($('#item-template').html()),
 	render: function(){
-		this.$el.html(this.template(this.model.toJSON()));
+		this.$el.html(this.template({ "data": this.model.toJSON()}));
 		return this.$el; // enable chained calls
 	}
 });

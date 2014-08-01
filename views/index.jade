@@ -17,14 +17,19 @@ block content
 
 
   script#item-template(type='text/template')
-    td <%= server %>
-    td <%= job_id %>
-    td <%= frequency %>
-    td <%= started %>
-    td <% print('---'); %>
+    td <%= data.server %>
+    td <%= data.job_id %>
+    td <%= data.frequency %>
+    td <%= data.started %>
+    td <%= data.ended %>
     td
-      | <% switch(state.id) { case 0: %>
-      | <span class="label label-success"><%= state.name %></span>
+      | <% switch(data.state.id) { case 0: %>
+      | <span class="label label-success"><%= data.state.name %></span>
       | <% break; case 1 : %>
-      | <span class="label label-primary"><%= state.name %></span>
+      | <span class="label label-primary"><%= data.state.name %></span>
+      | <% break; case 2 : %>
+      | <span class="label label-warning"><%= data.state.name %></span>
+      | <% break; case 3 : %>
+      | <span class="label label-danger"><%= data.state.name %></span>
+      | <span class="badge"><%= data.overlap %></span>
       | <% break; } %>
