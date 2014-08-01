@@ -4,9 +4,20 @@ block content
   div.container
     h1 MoniCron 
     p Monitor your cronjobs
-    ul#cronjob-list.list-group
+    table#cronjob-list.table.table-striped
+      thead
+        tr
+          th Server
+          th Job ID
+          th Freq.
+          th Started
+          th Ended
+          th Status
 
 
   script#item-template(type='text/template')
-    <%= server %> <%= job_id %>
-    span.badge  ok
+    td <%= server %>
+    td <%= job_id %>
+    td <%= frequency %>
+    td <%= started %>
+    td <% print('---'); %>

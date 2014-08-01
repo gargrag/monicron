@@ -22,7 +22,7 @@ app.CronJobCollection = Backbone.Collection.extend({
 app.cronJobCollection = new app.CronJobCollection();
 
 app.CronJobView = Backbone.View.extend({
-	tagName: 'li',
+	tagName: 'tr',
 	template: _.template($('#item-template').html()),
 	render: function(){
 		this.$el.html(this.template(this.model.toJSON()));
