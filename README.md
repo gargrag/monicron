@@ -1,4 +1,7 @@
-# MONITRON	
+# MONICRON
+
+BE ADVISED THIS README LACKS LOVE
+
 Simple visual cronjob monitoring.
 This tool was made to those who has a lot of cronjob tasks running on many servers, and want an easy and out-of-the-box solution to know whats happen at a glance. And keep the things under control.
 
