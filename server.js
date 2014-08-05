@@ -12,8 +12,8 @@ var config = JSON.parse(fs.readFileSync(confFile));
 app.get('/cronjobs', cronjobs.getAll);
 app.get('/servers', cronjobs.getServers);
 
-app.put('/start/:server/:job_id/:frequency', cronjobs.startJob);
-app.put('/end/:server/:job_id', cronjobs.endJob);
+app.get('/start/:server/:job_id/:frequency', cronjobs.startJob);
+app.get('/end/:server/:job_id', cronjobs.endJob);
 
 app.get('/', frontend.index);
 
