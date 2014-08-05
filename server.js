@@ -4,6 +4,11 @@ var express = require('express'),
  
 var app = express();
 
+//Read from configuration file
+var confFile = 'config.json';
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync(confFile));
+
 app.get('/cronjobs', cronjobs.getAll);
 app.get('/servers', cronjobs.getServers);
 
@@ -25,5 +30,5 @@ app.configure(function () {
 		app.use(express.static(__dirname + '/public'));
 });
  
-app.listen(3000);
+app.listen(config.app_port);
 console.log('Listening on port 3000...');
