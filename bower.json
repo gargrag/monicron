@@ -1,0 +1,26 @@
+{
+  "name": "monicron",
+  "version": "0.0.1",
+  "authors": [
+    "Gastón Acosta <correo@gaston.com.uy>"
+  ],
+  "description": "Track your cronjobs",
+  "main": "server.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "http://monicron.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "jquery": "~2.1.1"
+  }
+}

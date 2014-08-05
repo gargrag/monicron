@@ -12,8 +12,12 @@ db.open(function(err, db) {
 		console.log("Connected to 'monitron_db' database");
 		db.collection('cronjobs', {strict:true}, function(err, collection) {
 			if (err) {
-				console.log("The 'cronjobs' collection doesn't exist. Creating it with sample data...");
-				populateDB();
+				console.log('Initializing empty collection...');
+				db.createCollection('cronjobs', function(err, collection){
+					if(err){
+						console.log('Could not create collection!');
+					}
+				});
 			}
 		});
 	}else{
@@ -22,14 +26,22 @@ db.open(function(err, db) {
 });
 
 exports.getAll = function(req, res) {		
+	
+	var query = {};
+
+	if( req.param('server') ){
+		query = { "server" : req.param('server') };
+		console.log(req.param('server'));
+	}
+
 	db.collection('cronjobs', function(err, collection) {
-		collection.find().toArray(function(err, items) {
+		collection.find(query).toArray(function(err, items) {
 			res.send(items);
-			console.log(items);
 		});
 	});
 };
 
+/*
 exports.getPerServer = function(req, res) {		
 	db.collection('cronjobs', function(err, collection) {
 		collection.find({ server: req.params.server }).toArray(function(err, items) {
@@ -50,6 +62,7 @@ exports.getPerId = function(req, res) {
 		});
 	});
 };
+*/
 
 exports.startJob = function(req, res) {
 
@@ -114,33 +127,26 @@ exports.endJob = function(req, res){
 
 }
 
+exports.getServers = function(req, res){
+	db.collection('cronjobs', function(err, collection) {
+		collection.distinct('server', function(err, result) {
+			if (err) {
+				res.send({'error':'An error has occurred, can not get servers'});
+			} else {
+				var servers = new Array();
+				result.forEach(function(server){
+					servers.push({name: server});
+				});
+				res.send(servers);
+			}
+		});
+	});
+
+}
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 // Populate database with sample data -- Only used once: the first time the application is started.
 // You'd typically not find this code in a real-life app, since the database would already exist.
-var populateDB = function() {
-
-	var cronjobs = [
-		{
-		server: "test_server",
-		job_id: "maintenance",
-		frequency: 5,
-		started: new Date().toUTCString(),
-		state: {id: 0, name: "running"}
-	},
-	];
-
-	db.collection('cronjobs', function(err, collection) {
-		collection.insert(cronjobs, {safe:true}, function(err, result) {});
-	});
-
-};
-
-var humanDate = function(timestamp){
-	var date = new Date(timestamp);
-	return date.getFullYear + '-' + date.getMonth()++ + '-' + date.getDate() + ' ' +
-		date.getHours() + ':' + date.getMinutes();
-}
-
 var redoJob = function(cronjob){
 	var date = new Date();
 
@@ -158,3 +164,45 @@ var redoJob = function(cronjob){
 		collection.update(cronjob._id, update, {safe: true}, function(err, result){});
 	});
 }
+
+var reparseJobs = function(){
+	//console.log(' Reparsing cronjobs...');
+	db.collection('cronjobs', function(err, collection){
+		collection.find().toArray(function(err, items){
+			items.forEach(function(cronjob){
+				if(cronjob.ended == null){
+					started = new Date(cronjob.started).getTime();
+					max_delay = cronjob.frequency * 60 * 1000;
+					now = new Date().getTime();
+					//console.log(cronjob);
+					//console.log(started);
+					//console.log(max_delay);
+					//console.log(now);
+					if( now > started + max_delay){
+						update = {
+							$set: {
+								"state" : { id: 4, "name": "Lost" }
+							}
+						}
+
+						collection.update(cronjob._id, update, {safe:true}, function(){});
+
+					}
+					
+					if( now > (started + max_delay - 60000)){
+						update = {
+							$set: {
+								"state" : { id: 2, "name": "chk timing" }
+							}
+						}
+
+						collection.update(cronjob._id, update, {safe:true}, function(){});
+
+					}
+				}
+			});
+		});
+	});
+
+}
+setInterval(reparseJobs, 30000);

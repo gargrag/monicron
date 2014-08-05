@@ -7,14 +7,13 @@ html
 			block meta
 				meta(name='description', content='')
 				meta(name='keywords', content='')
+				meta(name='viewport' content='width=device-width, initial-scale=1.0')
 			link(rel='stylesheet', href='lib/bootstrap/css/bootstrap.min.css')
 			| <style>
 			| body { padding-top: 60px; }
 			| </style>
-			script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
-			script(src='//underscorejs.org/underscore-min.js')
-			script(src='//backbonejs.org/backbone-min.js')
-			script(src='/js/main.js')
+			script(src='/js/bower.min.js')
+			script(src='/js/monicron.js')
 	body
 		include header
 

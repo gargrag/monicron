@@ -5,8 +5,7 @@ var express = require('express'),
 var app = express();
 
 app.get('/cronjobs', cronjobs.getAll);
-app.get('/cronjobs/:server', cronjobs.getPerServer);
-app.get('/cronjobs/:server/:job_id', cronjobs.getPerId);
+app.get('/servers', cronjobs.getServers);
 
 app.put('/start/:server/:job_id/:frequency', cronjobs.startJob);
 app.put('/end/:server/:job_id', cronjobs.endJob);

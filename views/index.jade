@@ -2,26 +2,26 @@ extends layout
 
 block content
   div.container
-    h1 MoniCron 
-    p Monitor your cronjobs
-    table.table.table-striped
+    table.table.table-striped.table-bordered
       thead
         tr
           th Server
           th Job ID
           th Freq.
-          th Started
-          th Ended
+          th.hidden-xs Started
+          th.hidden-xs Ended
           th Status
       tbody#cronjob-list
 
+  script#server-template(type='text/template')
+    <a href="/#server/<%= data.name %>"><%= data.name %></a>
 
   script#item-template(type='text/template')
     td <%= data.server %>
     td <%= data.job_id %>
     td <%= data.frequency %>
-    td <%= data.started %>
-    td <%= data.ended %>
+    td.hidden-xs <% print(formatDate(data.started)); %>
+    td.hidden-xs <% print(formatDate(data.ended)); %>
     td
       | <% switch(data.state.id) { case 0: %>
       | <span class="label label-success"><%= data.state.name %></span>
@@ -31,5 +31,7 @@ block content
       | <span class="label label-warning"><%= data.state.name %></span>
       | <% break; case 3 : %>
       | <span class="label label-danger"><%= data.state.name %></span>
-      | <span class="badge"><%= data.overlap %></span>
+      | <span class="badge hidden-xs"><%= data.overlap %></span>
+      | <% break; case 4 : %>
+      | <span class="label label-info"><%= data.state.name %></span>
       | <% break; } %>
