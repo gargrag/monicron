@@ -4,8 +4,13 @@ var Server = mongo.Server,
 Db = mongo.Db,
 BSON = mongo.BSONPure;
 
-var server = new Server('localhost', 27017, {auto_reconnect: true});
-db = new Db('monitron_db', server);
+// Read from configuration file
+var confFile = 'config.json';
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync(confFile));
+
+var server = new Server(config.mongodb_server, config.mongodb_port, {auto_reconnect: true});
+db = new Db(config.mongodb_db, server);
 
 db.open(function(err, db) {
 	if(!err) {
