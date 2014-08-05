@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "mongodb": "1.4.x",
     "express": "3.x",
     "jade": "latest",
     "stylus": "latest"
