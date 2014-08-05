@@ -1,5 +1,5 @@
 {
-  "name": "monitron",
+  "name": "moniCron",
   "description": "Web interface for cronjob monitoring",
   "version": "0.0.1",
   "private": true,
